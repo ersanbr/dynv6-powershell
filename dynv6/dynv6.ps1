@@ -11,11 +11,12 @@ if ($current_lines -ne 1){
 # Get actual ipv6
 $current =  Get-NetIPAddress -AddressFamily IPv6| where { $_.PrefixOrigin -match 'RouterAdvertisement'}| where { $_.SuffixOrigin -match 'Link'} | where {$_.AddressState -match 'Preferred'} | findstr -I -N IPAddress | %{ $_.Split(' ')[10]; }
 
+# File save ipv6
 $file = ($HOME + "\dynv6.addr6")
 
 $log = ($HOME + "\dynv6.log")
 
-$token = "YOUR TOKEN"
+$token = "YOUR_TOKEN"
 
 $hostname ="YOUR_HOSTNAME.dynv6.net"
 
@@ -33,6 +34,6 @@ if ($old -eq $current) {
     } else {
 		$url = ("http://dynv6.com/api/update?hostname=" + $hostname + "&ipv6=" + $current + "&token=" + $token)
 		Invoke-RestMethod -Uri $url
-		$current > $file
+		echo $current > $file
 		((Get-Date -format dd/MM/yyyy-HH:mm:s) +" - IPv6 address updated") >> $log
     }
